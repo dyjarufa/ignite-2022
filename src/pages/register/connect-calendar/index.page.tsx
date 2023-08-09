@@ -1,13 +1,25 @@
 import { signIn, useSession } from 'next-auth/react'
 import { ArrowRight } from 'phosphor-react'
 import { Button, Heading, MultiStep, Text } from '@ignite-ui/react'
+import { useRouter } from 'next/router'
 
 import { Container, Header } from '../style'
 
-import { ConnectBox, ConnectItem } from './styles'
+import { AuthError, ConnectBox, ConnectItem } from './styles'
 
 export default function Register() {
   const session = useSession()
+  const router = useRouter()
+
+  // console.log(session)
+
+  const isSignedIn = session.status === 'authenticated'
+
+  const hasAuthError = !!router.query.error
+
+  async function handleConnectCalendar() {
+    await signIn('google')
+  }
 
   return (
     <Container>
@@ -24,18 +36,29 @@ export default function Register() {
       <ConnectBox>
         <ConnectItem>
           <Text>Google Calendar</Text>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => signIn('google')}
-          >
-            Sync
-          </Button>
+          {isSignedIn ? (
+            <Button size="sm" disabled>
+              Connected
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleConnectCalendar}
+            >
+              Sync
+            </Button>
+          )}
         </ConnectItem>
 
-        <pre>{JSON.stringify(session.data)}</pre>
+        {hasAuthError && (
+          <AuthError>
+            Failed to connect to Google. Please ensure you have enabled access
+            permission to Google Calendar.
+          </AuthError>
+        )}
 
-        <Button type="submit">
+        <Button type="submit" disabled={!isSignedIn}>
           Next step
           <ArrowRight />
         </Button>
