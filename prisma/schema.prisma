@@ -11,11 +11,45 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid()) // @id: é a primary key |  @default: será preecnhido automaticamente
-  username String @unique
-  name     String
-
+  id         String   @id @default(uuid()) // @id: é a primary key |  @default: será preecnhido automaticamente
+  username   String   @unique
+  name       String
+  email      String?  @unique
+  avatar_url String?
   created_at DateTime @default(now())
 
-  @@map("users") // após declar todos os campos da tabela posso costumizar o nome da minha tabela para "users"
+  accounts Account[]
+  sessions Session[]
+
+  @@map("users") // após declar todos os campos da tabela posso customizar o nome da minha tabela para "users"
+}
+
+model Account {
+  id                  String  @id @default(cuid())
+  user_Id             String
+  type                String
+  provider            String
+  provider_account_Id String
+  refresh_token       String?
+  access_token        String?
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String?
+  session_state       String?
+
+  user User @relation(fields: [user_Id], references: [id], onDelete: Cascade)
+
+  @@unique([provider, provider_account_Id])
+  @@map("accounts")
+}
+
+model Session {
+  id            String   @id @default(cuid())
+  session_token String   @unique
+  user_id       String
+  expires       DateTime
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
