@@ -21,7 +21,7 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  @@map("users") // após declar todos os campos da tabela posso customizar o nome da minha tabela para "users"
+  @@map("users") // após declarar todos os campos da tabela posso customizar o nome da minha tabela para "users"
 }
 
 model Account {
