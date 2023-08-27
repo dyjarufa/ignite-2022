@@ -24,8 +24,10 @@ export default function Home() {
         <Image
           src={previewImage}
           height={400}
-          quality={100}
-          priority
+          quality={
+            100
+          } /* next diminui a qualidade da imagem - com valor 100 a qualidade é mantida */
+          priority /* por padrão o next nao renderiza a imagem no 1o momento - com priority esse comportamento muda */
           alt="Calendar represents the functioning application"
         />
       </Preview>

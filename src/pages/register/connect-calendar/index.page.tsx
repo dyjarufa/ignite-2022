@@ -1,5 +1,5 @@
 import { signIn, useSession } from 'next-auth/react'
-import { ArrowRight } from 'phosphor-react'
+import { ArrowRight, Check } from 'phosphor-react'
 import { Button, Heading, MultiStep, Text } from '@ignite-ui/react'
 import { useRouter } from 'next/router'
 
@@ -21,6 +21,8 @@ export default function Register() {
     await signIn('google')
   }
 
+  console.log(session)
+
   return (
     <Container>
       <Header>
@@ -39,6 +41,7 @@ export default function Register() {
           {isSignedIn ? (
             <Button size="sm" disabled>
               Connected
+              <Check />
             </Button>
           ) : (
             <Button
@@ -47,6 +50,7 @@ export default function Register() {
               onClick={handleConnectCalendar}
             >
               Sync
+              <ArrowRight />
             </Button>
           )}
         </ConnectItem>
