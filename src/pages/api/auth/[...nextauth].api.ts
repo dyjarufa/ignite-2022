@@ -54,6 +54,12 @@ export function buildNextAuthOptions(
         }
         return true // ? o método signIn precisa ter um retorno true ou false. Caso a condição seja atendida retornarei true
       },
+      async session({ session, user }) {
+        return {
+          ...session,
+          user,
+        }
+      },
     },
   }
 }
