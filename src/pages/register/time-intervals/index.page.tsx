@@ -8,6 +8,7 @@ import {
 } from '@ignite-ui/react'
 import { Container, Header } from '../style'
 import {
+  FormError,
   IntervalBox,
   IntervalDay,
   IntervalInputs,
@@ -24,9 +25,53 @@ import { getWeekdays } from '@/utils/get-week-days'
  * (por exemplo, muitos componentes de UI de bibliotecas populares), você precisará do Controller para integrá-los ao React Hook Form.
  */
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
 
 export default function TimeIntervals() {
-  const timeIntervalsFormSchema = z.object({})
+  const timeIntervalsFormSchema = z.object({
+    intervals: z
+      .array(
+        z.object({
+          weekDay: z.number().min(0).max(6),
+          enable: z.boolean(),
+          startTime: z.string(),
+          endTime: z.string(),
+        })
+      )
+      //* inform que o tamanho do array precisa ser 7
+      .length(7)
+      //* modificar o formato do array - nesse exemplo estou filtando o interval e quero mostrar apenas intervals com 'enable === true'
+      .transform((intervals) => intervals.filter((interval) => interval.enable))
+      //* após eu transformar o array, não posso mais utilizar os métodos auxiliares como (min, max), uso um tipo de validação especial(*refine) que retorna um true ou false
+      .refine((intervals) => intervals.length > 0, {
+        message: 'you must select at least one day of the week',
+      })
+      .transform((intervals) => {
+        return intervals.map((interval) => {
+          return {
+            //? estou retornando um novo objeto: mantive o weekDay mas estou sobrescrevendo para ter startTimeInMinutes e endTimeInMinutes
+            weekDays: interval.weekDay,
+            startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+            endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
+          }
+        })
+      })
+      .refine(
+        (intervals) => {
+          return intervals.every(
+            (interval) =>
+              interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes
+          )
+        },
+        {
+          message: 'The end time must be at least 1 hour from the start',
+        }
+      ),
+  })
+
+  type timeIntervalFormInput = z.input<typeof timeIntervalsFormSchema> //? representa os dados de entrada(antes de passar pelo "transform")
+  type timeIntervalFormOut = z.output<typeof timeIntervalsFormSchema> //? representa os dados de saída(depois de passar pelo "transform")
 
   const {
     register,
@@ -34,15 +79,18 @@ export default function TimeIntervals() {
     control,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<TimeIntervalsFormInput, any, TimeIntervalsFormOutput>({
+    resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
       intervals: [
-        { weekDay: 0, enable: true, startTime: '08:00', endTime: '06:00' },
-        { weekDay: 1, enable: true, startTime: '08:00', endTime: '06:00' },
-        { weekDay: 2, enable: true, startTime: '08:00', endTime: '06:00' },
-        { weekDay: 3, enable: true, startTime: '08:00', endTime: '06:00' },
-        { weekDay: 5, enable: false, startTime: '08:00', endTime: '06:00' },
-        { weekDay: 6, enable: false, startTime: '08:00', endTime: '06:00' },
+        //* o ideal para trabalhar com horas é converte-las para minutos
+        { weekDay: 0, enable: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 1, enable: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 2, enable: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 3, enable: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 4, enable: true, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 5, enable: false, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 6, enable: false, startTime: '08:00', endTime: '18:00' },
       ],
     },
   })
@@ -52,10 +100,12 @@ export default function TimeIntervals() {
 
   const weekDays = getWeekdays()
 
-  async function handleSetTimeInterval() {}
+  async function handleSetTimeInterval(data: timeIntervalFormOut) {
+    console.log(data)
+  }
 
   //? https://react-hook-form.com/docs/usefieldarray#main
-  // * Permite manupular o compo de formulario que é um array
+  // * Permite manipular o compo de formulario que é um array
   const { fields } = useFieldArray({
     control, // control informa que o useFieldArray esta lidando como os intervals dos useForm
     name: 'intervals',
@@ -118,7 +168,10 @@ export default function TimeIntervals() {
             )
           })}
         </IntervalsContainer>
-        <Button type="submit">
+        {errors.intervals && (
+          <FormError size="sm">{errors.intervals.message}</FormError>
+        )}
+        <Button type="submit" disabled={isSubmitting}>
           Next Step
           <ArrowRight />
         </Button>
