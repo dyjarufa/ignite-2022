@@ -54,6 +54,11 @@ export function buildNextAuthOptions(
         }
         return true // ? o método signIn precisa ter um retorno true ou false. Caso a condição seja atendida retornarei true
       },
+
+      /* 
+      Temos uma questão de tipagem. Estou inserindo uma informação ('user') no retorno da função, mas internamento o Next.Auth não sabe o que é esse 'user'
+      Preciso adicionar essa tipagem em next-auth.d.ts
+     */
       async session({ session, user }) {
         return {
           ...session,

@@ -52,7 +52,7 @@ export default function TimeIntervals() {
         return intervals.map((interval) => {
           return {
             //? estou retornando um novo objeto: mantive o weekDay mas estou sobrescrevendo para ter startTimeInMinutes e endTimeInMinutes
-            weekDays: interval.weekDay,
+            weekDay: interval.weekDay,
             startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
             endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
           }
@@ -113,7 +113,7 @@ export default function TimeIntervals() {
   //? https://react-hook-form.com/docs/usefieldarray#main
   // * Permite manipular o compo de formulario que é um array
   const { fields } = useFieldArray({
-    control, // control informa que o useFieldArray esta lidando como os intervals dos useForm
+    control, // control => informa que o useFieldArray esta lidando como os intervals dos useForm
     name: 'intervals',
   })
 
@@ -133,9 +133,8 @@ export default function TimeIntervals() {
                 <IntervalDay>
                   {/* ..register não irá funcionar no Checkbox pois ele não é um elemento nativo do html */}
 
-                  {/* Controller ->  quando tem um elemento em tela visual que insere uma informação no formulário
-                  e não é um elemento nativo html
-                  */}
+                  {/* Controller ->  quando tem um elemento em tela visual não nativo do HTML que insere uma informação no formulário
+                   */}
                   <Controller
                     name={`intervals.${index}.enable`}
                     control={control}
