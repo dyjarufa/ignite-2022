@@ -1,6 +1,10 @@
 {
-  "extends": ["@rocketseat/eslint-config/react", "next/core-web-vitals","prettier"],
-  "plugins": ["import", "prettier"],
+  "extends": [
+    "@rocketseat/eslint-config/react",
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "plugins": ["import", "prettier", "react-hooks"],
   "rules": {
     "import/order": [
       "error",
@@ -19,9 +23,12 @@
     "import/first": "error",
     "import/newline-after-import": "error",
     "import/no-duplicates": "error",
-    "prettier/prettier": ["error", {
-      "singleQuote": true,
-      "semi": false
-    }]
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "semi": false
+      }
+    ]
   }
 }
