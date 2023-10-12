@@ -35,7 +35,7 @@ export default async function handler(
     buildNextAuthOptions(req, res) //* passa o req e res para que ele consiga obter informações da sessão
   )
 
-  console.log(session)
+  // console.log(session)
 
   if (!session) {
     return res.status(401).end()

@@ -28,6 +28,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
 import { api } from '@/lib/axios'
+import { useRouter } from 'next/router'
 
 export default function TimeIntervals() {
   const timeIntervalsFormSchema = z.object({
@@ -100,6 +101,7 @@ export default function TimeIntervals() {
   const intervals = watch('intervals')
 
   const weekDays = getWeekdays()
+  const router = useRouter()
 
   async function handleSetTimeInterval(data: timeIntervalFormOut) {
     const { intervals } = data
@@ -108,6 +110,8 @@ export default function TimeIntervals() {
     await api.post('/users/time-intervals', {
       intervals,
     })
+
+    await router.push('/register/update-profile')
   }
 
   //? https://react-hook-form.com/docs/usefieldarray#main

@@ -63,7 +63,7 @@ export default function Register() {
   return (
     <Container>
       <Header>
-        <Heading as="strong">Well come to Ignite Call!</Heading>
+        <Heading as="strong">Welcome to Ignite Call!</Heading>
         <Text>
           We need some info to create your profile! You can update it later 😉
         </Text>
