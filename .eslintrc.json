@@ -4,7 +4,7 @@
     "next/core-web-vitals",
     "prettier"
   ],
-  "plugins": ["import", "prettier", "react-hooks"],
+  "plugins": ["import", "react-hooks"],
   "rules": {
     "import/order": [
       "error",
