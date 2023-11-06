@@ -1,3 +1,4 @@
+```tsx
 import {
   Button,
   Checkbox,
@@ -13,6 +14,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
 
 import { getWeekdays } from '@/utils/get-week-days'
+
+/*
+ * Controller ou Componentes controlados: Se você estiver usando componentes controlados ou componentes de terceiros que não expõem um ref
+ * (por exemplo, muitos componentes de UI de bibliotecas populares), você precisará do Controller para integrá-los ao React Hook Form.
+ */
+
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
 import { api } from '@/lib/axios'
 
@@ -38,14 +45,18 @@ export default function TimeIntervals() {
           endTime: z.string(),
         })
       )
+      //* inform que o tamanho do array precisa ser 7
       .length(7)
+      //* modificar o formato do array - nesse exemplo estou filtando o interval e quero mostrar apenas intervals com 'enable === true'
       .transform((intervals) => intervals.filter((interval) => interval.enable))
+      //* após eu transformar o array, não posso mais utilizar os métodos auxiliares como (min, max), uso um tipo de validação especial(*refine) que retorna um true ou false
       .refine((intervals) => intervals.length > 0, {
         message: 'you must select at least one day of the week',
       })
       .transform((intervals) => {
         return intervals.map((interval) => {
           return {
+            // ? estou retornando um novo objeto: mantive o weekDay mas estou sobrescrevendo para ter startTimeInMinutes e endTimeInMinutes
             weekDay: interval.weekDay,
             startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
             endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
@@ -65,8 +76,8 @@ export default function TimeIntervals() {
       ),
   })
 
-  type timeIntervalFormInput = z.input<typeof timeIntervalsFormSchema>
-  type timeIntervalFormOut = z.output<typeof timeIntervalsFormSchema>
+  type timeIntervalFormInput = z.input<typeof timeIntervalsFormSchema> // ? representa os dados de entrada(antes de passar pelo "transform")
+  type timeIntervalFormOut = z.output<typeof timeIntervalsFormSchema> // ? representa os dados de saída(depois de passar pelo "transform")
 
   const {
     register,
@@ -90,6 +101,7 @@ export default function TimeIntervals() {
     },
   })
 
+  //* Permite saber em tempo real as mudanças que sofreram em um campo
   const intervals = watch('intervals')
 
   const weekDays = getWeekdays()
@@ -106,8 +118,10 @@ export default function TimeIntervals() {
     await router.push('/register/update-profile')
   }
 
+  // ? https://react-hook-form.com/docs/usefieldarray#main
+  // * Permite manipular o compo de formulario que é um array
   const { fields } = useFieldArray({
-    control,
+    control, // control => informa que o useFieldArray esta lidando como os intervals dos useForm
     name: 'intervals',
   })
 
@@ -115,7 +129,7 @@ export default function TimeIntervals() {
     <Container>
       <Header>
         <Heading as="strong">Almost there </Heading>
-        <Text>Book the times you are available on each day of the week 📅</Text>
+        <Text>Book the times you're available on each day of the week 📅</Text>
         <MultiStep size={4} currentStep={3} />
       </Header>
 
@@ -136,7 +150,7 @@ export default function TimeIntervals() {
                       return (
                         <Checkbox
                           onCheckedChange={(checked) => {
-                            field.onChange(checked === true)
+                            field.onChange(checked === true) // ? confirmando que é um valor true, pois o type do checked pode ser 'indeterminate'
                           }}
                           checked={field.value}
                         />
@@ -178,3 +192,4 @@ export default function TimeIntervals() {
     </Container>
   )
 }
+```

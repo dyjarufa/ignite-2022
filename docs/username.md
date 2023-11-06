@@ -31,7 +31,7 @@ export default function Schedule({ user }: ScheduleProps) {
 // as páginas estatática não possuem REQ e RES pois elas não são criadas em tempo de execução, elas são criadas no momento da build.
 // Por isso será usado o "params"
 
-// correção de erro(): como o [username] dessa rota não é fixo e sim parametrizado ou dinâmico(precisamos criar uma página estática por usuário),
+// correção de erro GetStaticPaths is required : como o [username] dessa rota não é fixo e sim parametrizado ou dinâmico(precisamos criar uma página estática por usuário),
 // preciso informar obrigatoriamente ao Next o método GetStaticPath
 
 // GetStaticPath sinaliza quais são usuários(parâmetros) quero que gera páginas estáticas no momento desde o primeiro momento da build da aplicação
