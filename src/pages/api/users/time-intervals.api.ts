@@ -1,10 +1,12 @@
-/* Arquivo responsável por receber o formulário do time-intervals e salvar essas info dentro do BD da tabela User*/
+/* Arquivo responsável por receber o formulário do time-intervals e salvar essas info dentro do BD da tabela User */
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
-import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 import { z } from 'zod'
+
 import { prisma } from '@/lib/prisma'
+
+import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 
 const timeIntervalsBodySchema = z.object({
   intervals: z.array(
@@ -24,7 +26,7 @@ export default async function handler(
     return res.status(405).end()
   }
 
-  /* 
+  /*
     Obter informações do usuário logada no Next.Auth
     ? para pegar informações do usuario do lado do server side:
     ? https://next-auth.js.org/configuration/nextjs#unstable_getserversession

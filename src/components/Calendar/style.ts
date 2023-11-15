@@ -1,4 +1,4 @@
-import { styled } from '@ignite-ui/react'
+import { Text, styled } from '@ignite-ui/react'
 
 export const CalendarContainer = styled('div', {
   display: 'flex',
@@ -13,8 +13,9 @@ export const CalendarHeader = styled('div', {
   justifyContent: 'space-between',
 })
 
-export const CalendarTitle = styled('div', {
+export const CalendarTitle = styled(Text, {
   fontWeight: '$medium',
+  textTransform: 'capitalize',
 
   span: {
     color: '$gray200',
