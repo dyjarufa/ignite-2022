@@ -5,7 +5,10 @@ file_version: 1.1.3
 app_version: 1.18.21
 ---
 
-// aqui seria um exemplo de página estática a ser utilizada, por isso será adotada a abordagem do GetStaticProps // as páginas estatática não \*\*possuem\*\* **REQ** e **RES** pois elas não são criadas em tempo de execução, elas são criadas no momento da build. // Por isso será usado o "params" // correção de erro GetStaticPaths is required : como o \[username\] dessa rota não é fixo e sim parametrizado ou dinâmico(precisamos criar uma página estática por usuário), // preciso informar obrigatoriamente ao Next o método GetStaticPath // GetStaticPath sinaliza quais são usuários(parâmetros) quero que gera páginas estáticas no momento desde o primeiro momento da build da aplicação
+aqui seria um exemplo de página estática a ser utilizada, por isso será adotada a abordagem do GetStaticProps<br/>
+<br/>as páginas estatática não \*\*possuem\*\* **REQ** e **RES** pois elas não são criadas em tempo de execução, elas são criadas no momento da build. Por isso será usado o "params"<br/>
+<br/>correção de erro GetStaticPaths is required : como o \[username\] dessa rota não é fixo e sim parametrizado ou dinâmico(precisamos criar uma página estática por usuário), // preciso informar obrigatoriamente ao Next o método GetStaticPath<br/>
+<br/>GetStaticPath sinaliza quais são usuários(parâmetros) quero que gera páginas estáticas no momento desde o primeiro momento da build da aplicação
 
 <!-- NOTE-swimm-snippet: the lines below link your snippet to Swimm -->
 
