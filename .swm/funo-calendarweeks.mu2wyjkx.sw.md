@@ -123,32 +123,31 @@ Quantos dias vou precisar do próximo mês
 ### 📄 src/components/Calendar/index.tsx
 
 ```tsx
-65         const lastDayInCurrentMonth = currentDate.set(
-66           'date',
-67           currentDate.daysInMonth() // pego o último dia do mês
-68         )
-69
-70         const lastWeekDay = lastDayInCurrentMonth.get('day')
-71
-72         const nextMonthFillArray = Array.from({
-73           length: 7 - (lastWeekDay + 1),
-74         }).map((_, i) => {
-75           return lastDayInCurrentMonth.add(i + 1, 'day')
-76         })
-77
-78         // return nextMonthFillArray
-79         const calendarDays = [
-80           ...previousMonthFillArray.map((date) => {
-81             return { date, disabled: true }
-82           }),
-83           ...daysInMonthArray.map((date) => {
-84             return { date, disabled: false }
-85           }),
-86           ...nextMonthFillArray.map((date) => {
-87             return { date, disabled: true }
-88           }),
-89         ]
-90
+70         const lastDayInCurrentMonth = currentDate.set(
+71           'date',
+72           currentDate.daysInMonth() // pego o último dia do mês
+73         )
+74
+75         const lastWeekDay = lastDayInCurrentMonth.get('day')
+76
+77         const nextMonthFillArray = Array.from({
+78           length: 7 - (lastWeekDay + 1),
+79         }).map((_, i) => {
+80           return lastDayInCurrentMonth.add(i + 1, 'day')
+81         })
+82
+83         // return nextMonthFillArray
+84         const calendarDays = [
+85           ...previousMonthFillArray.map((date) => {
+86             return { date, disabled: true }
+87           }),
+88           ...daysInMonthArray.map((date) => {
+89             return { date, disabled: date.endOf('day').isBefore(new Date()) }
+90           }),
+91           ...nextMonthFillArray.map((date) => {
+92             return { date, disabled: true }
+93           }),
+94         ]
 ```
 
 <br/>
