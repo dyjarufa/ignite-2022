@@ -49,8 +49,6 @@ export default async function handler(
 
   const { time_start_in_minutes, time_end_in_minutes } = userAvailability
 
-  // considering that time is being booked about hour by hourtime_end_in_minutes
-
   const startHour = time_start_in_minutes / 60
 
   const endHour = time_end_in_minutes / 60
