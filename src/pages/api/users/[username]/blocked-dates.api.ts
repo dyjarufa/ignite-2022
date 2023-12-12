@@ -43,10 +43,34 @@ export default async function handler(
     })
   })
 
-  // verificar cada dia semana, quais horarios tenho disponiveis e também quais agendamentos foram feitos em cada horário
+  // verificar cada dia semana, quais horários tenho disponíveis e também quais agendamentos foram feitos em cada horário
   // realizar isso em 1 query no BD
 
-  // $queryRaw =>  query complexa com, prisma
+  // $queryRaw =>  query complexa com prisma
 
-  return res.json({ blockedWeekDays })
+  const blockedDateRaw: Array<{ date: number }> = await prisma.$queryRaw`
+    SELECT
+      EXTRACT(DAY FROM S.date) AS date,
+      COUNT(S.date) AS amount,
+      ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60 ) AS size
+
+    FROM schedulings S
+
+    LEFT JOIN user_time_intervals UTI
+      ON UTI.week_day = WEEKDAY(DATE_ADD(S.date, INTERVAL 1 DAY))
+
+    WHERE S.user_Id = ${user.id}
+      AND DATE_FORMAT(S.date, "%Y-%m") = ${`${year}-${month}`}
+    
+    GROUP BY EXTRACT(DAY from S.date),
+      ((UTI.time_end_in_minutes - UTI.time_start_in_minutes) / 60 )
+
+    HAVING amount >= size 
+  `
+
+  const blockedDates = blockedDateRaw.map((item) => item.date)
+
+  console.log(blockedDateRaw)
+
+  return res.json({ blockedWeekDays, blockedDates })
 }

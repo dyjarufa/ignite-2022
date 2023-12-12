@@ -1,10 +1,12 @@
-/* Arquivo responsável por receber o formulário do time-intervals e salvar essas info dentro do BD da tabela User*/
+/* Arquivo responsável por receber o formulário do time-intervals e salvar essas info dentro do BD da tabela User */
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
-import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 import { z } from 'zod'
+
 import { prisma } from '@/lib/prisma'
+
+import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 
 const updateProfileBodySchema = z.object({
   bio: z.string(),
