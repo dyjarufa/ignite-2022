@@ -8,7 +8,7 @@ import {
   TextInput,
 } from '@ignite-ui/react'
 import { ArrowRight } from 'phosphor-react'
-import { z } from 'zod'
+import { z } from 'zod'********
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
@@ -47,7 +47,7 @@ export default function TimeIntervals() {
       )
       //* inform que o tamanho do array precisa ser 7
       .length(7)
-      //* modificar o formato do array - nesse exemplo estou filtando o interval e quero mostrar apenas intervals com 'enable === true'
+      //* modificar o formato do array - nesse exemplo estou filtrando o interval e quero mostrar apenas intervals com 'enable === true'
       .transform((intervals) => intervals.filter((interval) => interval.enable))
       //* após eu transformar o array, não posso mais utilizar os métodos auxiliares como (min, max), uso um tipo de validação especial(*refine) que retorna um true ou false
       .refine((intervals) => intervals.length > 0, {

@@ -43,11 +43,6 @@ export default async function handler(
     })
   })
 
-  // verificar cada dia semana, quais horários tenho disponíveis e também quais agendamentos foram feitos em cada horário
-  // realizar isso em 1 query no BD
-
-  // $queryRaw =>  query complexa com prisma
-
   const blockedDateRaw: Array<{ date: number }> = await prisma.$queryRaw`
     SELECT
       EXTRACT(DAY FROM S.date) AS date,
