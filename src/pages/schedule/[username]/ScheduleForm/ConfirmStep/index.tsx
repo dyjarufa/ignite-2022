@@ -4,13 +4,16 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
+
+import { api } from '@/lib/axios'
 
 import { ConfirmForm, FormActions, FormError, FormHeader } from './styles'
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, { message: 'Name must be at least 3 characters' }),
   email: z.string().email({ message: 'Type a valid email address' }),
-  observation: z.string().nullable(),
+  observations: z.string().nullable(),
 })
 
 type confirmFormData = z.infer<typeof confirmFormSchema>
@@ -32,8 +35,21 @@ export function ConfirmStep({
     resolver: zodResolver(confirmFormSchema),
   })
 
-  function handleConfirmScheduling(data: confirmFormData) {
-    console.log(data)
+  const router = useRouter()
+
+  const username = String(router.query.username)
+
+  async function handleConfirmScheduling(data: confirmFormData) {
+    const { name, email, observations } = data
+
+    await api.post(`/users/${username}/schedule`, {
+      name,
+      email,
+      observations,
+      date: schedulingTime,
+    })
+
+    onCancelConfirmation()
   }
 
   const describedDate = dayjs(schedulingTime).format('DD[ de ]MMMM[ de ]YYYY')
@@ -72,9 +88,9 @@ export function ConfirmStep({
 
       <label>
         <Text size="sm">Observations</Text>
-        <TextArea {...register('observation')} />
-        {errors.observation && (
-          <FormError>{errors.observation.message}</FormError>
+        <TextArea {...register('observations')} />
+        {errors.observations && (
+          <FormError>{errors.observations.message}</FormError>
         )}
       </label>
 

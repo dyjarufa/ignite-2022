@@ -70,12 +70,12 @@ model UserTimeInterval {
 }
 
 model Scheduling {
-  id         String   @id @default(uuid())
-  date       DateTime
-  name       String
-  email      String
-  obervation String?
-  create_at  DateTime @default(now())
+  id           String   @id @default(uuid())
+  date         DateTime
+  name         String
+  email        String
+  observations String?
+  create_at    DateTime @default(now())
 
   user    User   @relation(fields: [user_Id], references: [id])
   user_Id String
