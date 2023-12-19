@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { z } from 'zod' //* zod adotado para usar o mínimo de parse para as informações vindas do "request"
+import { z } from 'zod'
+import { google } from 'googleapis'
 import dayjs from 'dayjs'
 
 import { prisma } from '@/lib/prisma'
+import { getGoogleOauthToken } from '@/lib/google'
 
 export default async function handle(
   req: NextApiRequest,
@@ -54,13 +56,42 @@ export default async function handle(
       .json({ message: 'There is another scheduling at the same time' })
   }
 
-  await prisma.scheduling.create({
+  const scheduling = await prisma.scheduling.create({
     data: {
       name,
       email,
       observations,
       date: schedulingDate.toDate(),
       user_Id: user.id,
+    },
+  })
+
+  const calendar = google.calendar({
+    version: 'v3',
+    auth: await getGoogleOauthToken(user.id),
+  })
+
+  await calendar.events.insert({
+    calendarId: 'primary', // Calendário principal do google calendar, pois posso ter outros calendário personalizados
+    conferenceDataVersion: 1,
+    requestBody: {
+      summary: `Ignite Call: ${name} `,
+      description: observations,
+      start: {
+        dateTime: schedulingDate.format(),
+      },
+      end: {
+        dateTime: schedulingDate.add(1, 'hour').format(),
+      },
+      attendees: [{ email, displayName: name }],
+      conferenceData: {
+        createRequest: {
+          requestId: scheduling.id,
+          conferenceSolutionKey: {
+            type: 'hangoutsMeet',
+          },
+        },
+      },
     },
   })
 
