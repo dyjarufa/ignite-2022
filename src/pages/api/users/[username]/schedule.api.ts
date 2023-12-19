@@ -4,7 +4,7 @@ import { google } from 'googleapis'
 import dayjs from 'dayjs'
 
 import { prisma } from '@/lib/prisma'
-import { getGoogleOauthToken } from '@/lib/google'
+import { getGoogleOAuthToken } from '@/lib/google'
 
 export default async function handle(
   req: NextApiRequest,
@@ -68,14 +68,14 @@ export default async function handle(
 
   const calendar = google.calendar({
     version: 'v3',
-    auth: await getGoogleOauthToken(user.id),
+    auth: await getGoogleOAuthToken(user.id),
   })
 
   await calendar.events.insert({
-    calendarId: 'primary', // Calendário principal do google calendar, pois posso ter outros calendário personalizados
+    calendarId: 'primary',
     conferenceDataVersion: 1,
     requestBody: {
-      summary: `Ignite Call: ${name} `,
+      summary: `Ignite Call: ${name}`,
       description: observations,
       start: {
         dateTime: schedulingDate.format(),
