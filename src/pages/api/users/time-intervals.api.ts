@@ -43,7 +43,7 @@ export default async function handler(
     return res.status(401).end()
   }
 
-  // * parse retorna os dados tipados e faz uma validação e dispara um erro caso o bady não retorne o formato do schema
+  // * parse retorna os dados tipados e faz uma validação e dispara um erro caso o body não retorne o formato do schema
   const { intervals } = timeIntervalsBodySchema.parse(req.body)
 
   /* existe uma limitação do sql lite a qual não permite múltiplas inserções do BD

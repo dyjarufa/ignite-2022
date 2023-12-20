@@ -14,6 +14,7 @@ import { useSession } from 'next-auth/react'
 import { GetServerSideProps } from 'next'
 import { getServerSession } from 'next-auth'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth].api'
 import { api } from '@/lib/axios'
@@ -51,38 +52,41 @@ export default function UpdateProfile() {
   }
 
   return (
-    <Container>
-      <Header>
-        <Heading as="strong">Welcome to Ignite Call!</Heading>
-        <Text>
-          We need some info to create your profile! You can update it later 😉
-        </Text>
+    <>
+      <NextSeo title="Update profile | Ignite Call" />
+      <Container>
+        <Header>
+          <Heading as="strong">Welcome to Ignite Call!</Heading>
+          <Text>
+            We need some info to create your profile! You can update it later 😉
+          </Text>
 
-        <MultiStep size={4} currentStep={4} />
-      </Header>
-      <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
-        <label>
-          <Text size="sm">Profile Photo</Text>
-          <Avatar
-            src={session.data?.user.avatar_url}
-            alt={session.data?.user.name}
-          />
-        </label>
+          <MultiStep size={4} currentStep={4} />
+        </Header>
+        <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
+          <label>
+            <Text size="sm">Profile Photo</Text>
+            <Avatar
+              src={session.data?.user.avatar_url}
+              alt={session.data?.user.name}
+            />
+          </label>
 
-        <label>
-          <Text size="sm">About you</Text>
-          <TextArea {...register('bio')} />
-          <FormAnnotation>
-            Share a bit about yourself. It will be featured on your personal
-            page
-          </FormAnnotation>
-        </label>
-        <Button type="submit" disabled={isSubmitting}>
-          Finish
-          <ArrowRight />
-        </Button>
-      </ProfileBox>
-    </Container>
+          <label>
+            <Text size="sm">About you</Text>
+            <TextArea {...register('bio')} />
+            <FormAnnotation>
+              Share a bit about yourself. It will be featured on your personal
+              page
+            </FormAnnotation>
+          </label>
+          <Button type="submit" disabled={isSubmitting}>
+            Finish
+            <ArrowRight />
+          </Button>
+        </ProfileBox>
+      </Container>
+    </>
   )
 }
 

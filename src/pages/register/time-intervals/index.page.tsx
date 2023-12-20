@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 import { getWeekdays } from '@/utils/get-week-days'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
@@ -112,69 +113,74 @@ export default function TimeIntervals() {
   })
 
   return (
-    <Container>
-      <Header>
-        <Heading as="strong">Almost there </Heading>
-        <Text>Book the times you are available on each day of the week 📅</Text>
-        <MultiStep size={4} currentStep={3} />
-      </Header>
+    <>
+      <NextSeo title="Select your availability | Ignite Call" />
+      <Container>
+        <Header>
+          <Heading as="strong">Almost there </Heading>
+          <Text>
+            Book the times you are available on each day of the week 📅
+          </Text>
+          <MultiStep size={4} currentStep={3} />
+        </Header>
 
-      <IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeInterval)}>
-        <IntervalsContainer>
-          {fields.map((field, index) => {
-            return (
-              <IntervalItem key={field.id}>
-                <IntervalDay>
-                  {/* ..register não irá funcionar no Checkbox pois ele não é um elemento nativo do html */}
+        <IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeInterval)}>
+          <IntervalsContainer>
+            {fields.map((field, index) => {
+              return (
+                <IntervalItem key={field.id}>
+                  <IntervalDay>
+                    {/* ..register não irá funcionar no Checkbox pois ele não é um elemento nativo do html */}
 
-                  {/* Controller ->  quando tem um elemento em tela visual não nativo do HTML que insere uma informação no formulário
-                   */}
-                  <Controller
-                    name={`intervals.${index}.enable`}
-                    control={control}
-                    render={({ field }) => {
-                      return (
-                        <Checkbox
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked === true)
-                          }}
-                          checked={field.value}
-                        />
-                      )
-                    }}
-                  />
+                    {/* Controller ->  quando tem um elemento em tela visual não nativo do HTML que insere uma informação no formulário
+                     */}
+                    <Controller
+                      name={`intervals.${index}.enable`}
+                      control={control}
+                      render={({ field }) => {
+                        return (
+                          <Checkbox
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked === true)
+                            }}
+                            checked={field.value}
+                          />
+                        )
+                      }}
+                    />
 
-                  <Text>{weekDays[field.weekDay]}</Text>
-                </IntervalDay>
-                <IntervalInputs>
-                  <TextInput
-                    size="sm"
-                    type="time"
-                    step={60}
-                    disabled={intervals[index].enable === false}
-                    {...register(`intervals.${index}.startTime`)}
-                  />
+                    <Text>{weekDays[field.weekDay]}</Text>
+                  </IntervalDay>
+                  <IntervalInputs>
+                    <TextInput
+                      size="sm"
+                      type="time"
+                      step={60}
+                      disabled={intervals[index].enable === false}
+                      {...register(`intervals.${index}.startTime`)}
+                    />
 
-                  <TextInput
-                    size="sm"
-                    type="time"
-                    step={60}
-                    disabled={intervals[index].enable === false}
-                    {...register(`intervals.${index}.endTime`)}
-                  />
-                </IntervalInputs>
-              </IntervalItem>
-            )
-          })}
-        </IntervalsContainer>
-        {errors.intervals && (
-          <FormError size="sm">{errors.intervals.message}</FormError>
-        )}
-        <Button type="submit" disabled={isSubmitting}>
-          Next Step
-          <ArrowRight />
-        </Button>
-      </IntervalBox>
-    </Container>
+                    <TextInput
+                      size="sm"
+                      type="time"
+                      step={60}
+                      disabled={intervals[index].enable === false}
+                      {...register(`intervals.${index}.endTime`)}
+                    />
+                  </IntervalInputs>
+                </IntervalItem>
+              )
+            })}
+          </IntervalsContainer>
+          {errors.intervals && (
+            <FormError size="sm">{errors.intervals.message}</FormError>
+          )}
+          <Button type="submit" disabled={isSubmitting}>
+            Next Step
+            <ArrowRight />
+          </Button>
+        </IntervalBox>
+      </Container>
+    </>
   )
 }
