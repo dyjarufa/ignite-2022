@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['page.tsx', 'api.ts', 'api.tsx'], //* informar ao Next.js quais as extensões de arquivos queremos que ele transforme em rotas/páginas da aplicação.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 
 /*

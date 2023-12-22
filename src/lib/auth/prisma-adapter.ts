@@ -1,8 +1,8 @@
 import { Adapter } from 'next-auth/adapters'
-import { prisma } from '../prisma'
 import { NextApiRequest, NextApiResponse, NextPageContext } from 'next'
-
 import { destroyCookie, parseCookies } from 'nookies'
+
+import { prisma } from '../prisma'
 
 export function PrismaAdapter(
   req: NextApiRequest | NextPageContext['req'],
@@ -152,9 +152,7 @@ export function PrismaAdapter(
         avatar_url: prismaUser.avatar_url!,
       }
     },
-    async deleteUser(userId) {
-      return
-    },
+    async deleteUser(userId) {},
     async linkAccount(account) {
       await prisma.account.create({
         data: {
@@ -172,9 +170,7 @@ export function PrismaAdapter(
         },
       })
     },
-    async unlinkAccount({ providerAccountId, provider }) {
-      return
-    },
+    async unlinkAccount({ providerAccountId, provider }) {},
     async createSession({ sessionToken, userId, expires }) {
       await prisma.session.create({
         data: {
@@ -232,7 +228,7 @@ export function PrismaAdapter(
         },
       })
       return {
-        sessionToken: prismaSession.session_token, //? prismaSession: uso os dados retornados do bd
+        sessionToken: prismaSession.session_token, // ? prismaSession: uso os dados retornados do bd
         expires: prismaSession.expires,
         userId: prismaSession.user_id,
       }
